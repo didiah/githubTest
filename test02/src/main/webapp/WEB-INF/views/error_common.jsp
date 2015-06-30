@@ -10,7 +10,7 @@
 <body>
 	<h4>${exception.getMessage() }</h4>
 	
-	<ul>
+	<ul>afdadfdfafda
 	<c:forEach items="${exception.getStackTrace()}" var="stack">
 		<li>${stack.toString() }</li>
 	</c:forEach>
