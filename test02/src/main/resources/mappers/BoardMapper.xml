@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="org.zerock.model.BoardMapper">
+<sql id ="searchSQL">
+ <if test="searchType != null">
+  <if test="searchType eq 't'.toString()">
+  and title like CONCAT('%', #{keyword}, '%')
+ </if>
+ <if test="searchType eq ' c'.toString()">
+ and content like CONCAT('%', #{keyword}, '%')
+ </if>
+ <if test="searchType eq 'w'.toString()">
+ and writer like CONCAT('%', #{keyword}, '%')
+ </if>
+ <if test="searchType eq 'tc'.toString()">
+ and(title like CONCAT('%', #{keyword}, '%')OR content like CONCAT('%', #{keyword}, '%'))
+ </if>
+ <if test="searchType eq 'cw'.toString()">
+ and(content like CONCAT('%', #{keyword}, '%')OR writer like CONCAT('%',#{keyword}, '%'))
+ </if>
+ <if test="searchType eq 'tcw'.toString()">
+ and(title like CONCAT('%',#{keyword},'%')
+ OR content like CONCAT('%',#{keyword}, '%')
+ OR writer like CONCAT('%', #{keyword}, '%'))
+ </if>
+ </if>
+</sql>
+
+<select id="listPaging" resultType="Board">
+ select bno, title, content, writer, regdate, viewcnt
+ from tbl_board where bno > 0
+<include refid="searchSQL" />
+ order by bno desc
+ limit #{pageStart}, #{perPageNum}
+</select>
+<select id="countPaging" resultType="PageMaker">
+select count(bno) totalCount
+from tbl_board
+where bno>0
+<include refid="searchSQL"/>
+</select>
+</mapper>
